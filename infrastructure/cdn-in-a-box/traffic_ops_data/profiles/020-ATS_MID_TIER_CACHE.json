@@ -183,7 +183,7 @@
 			"configFile": "rascal.properties",
 			"name": "health.threshold.loadavg",
 			"secure": false,
-			"value": "25.0"
+			"value": "125.0"
 		},
 		{
 			"configFile": "rascal.properties",

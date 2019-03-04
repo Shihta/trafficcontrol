@@ -23,41 +23,26 @@ networks:
     driver: macvlan
     enable_ipv6: true
     driver_opts:
-      parent: enp61s0f0
+      parent: enp61s0f1
     ipam:
       config:
-        - subnet: 10.103.11.0/24
-          gateway: 10.103.11.1
-          ip_range: 10.103.11.128/28
-        - subnet: "fc01:9400:1000:8::/64"
-
+        - subnet: 10.103.21.0/24
+          gateway: 10.103.21.1
+          ip_range: 10.103.21.128/28
+        - subnet: "fc01:9400:1000:21::/64"
 
 services:
-  db:
-    cpuset: "0-7,16-23"
-  trafficops:
-    cpuset: "0-7,16-23"
-  trafficops-perl:
-    cpuset: "0-7,16-23"
-  trafficportal:
-    cpuset: "0-7,16-23"
-  trafficmonitor:
-    cpuset: "0-7,16-23"
-  trafficrouter:
-    cpuset: "0-7,16-23"
-  influxdb:
-    cpuset: "0-7,16-23"
-  trafficvault:
-    cpuset: "0-7,16-23"
-  edge:
-    cpuset: "0-7,16-23"
-  mid:
-    cpuset: "0-7,16-23"
-  origin:
-    cpuset: "0-7,16-23"
-  dns:
-    cpuset: "0-7,16-23"
-    networks:
-      default:
-        ipv4_address: 10.103.11.127
-        ipv6_address: "fc01:9400:1000:8::127"
+  vpn:
+    image: cdn-in-a-box_vpn
+    privileged: true
+    entrypoint: tail -f /dev/null
+    volumes:
+      - app_volume:/app_volume
+
+volumes:
+  app_volume:
+    driver_opts:
+      type: nfs
+      o: addr=10.103.11.11,rw
+      device: 10.103.11.11:/mnt/qctrd2/shihta/cdn
+
