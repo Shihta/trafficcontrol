@@ -21,14 +21,3 @@ zone "ciab.test" {
   forwarders {};
   allow-update { key ciab.test.; };
 };
-
-zone "239.16.172.in-addr.arpa" IN {
-  type master;
-  file "/etc/bind/zone.ip4.arpa";
-  forwarders {};
-};
-zone "0.0.0.0.0.0.0.0.0.0.0.0.0.8.0.0.0.0.0.0.1.0.0.4.9.1.0.c.f.ip6.arpa" IN {
-  type master;
-  file "/etc/bind/zone.ip6.arpa";
-  forwarders {};
-};

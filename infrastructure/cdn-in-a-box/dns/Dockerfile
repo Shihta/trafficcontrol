@@ -14,29 +14,20 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-FROM ubuntu:trusty-20170817
+FROM ubuntu:18.04
 
 ENV BIND_USER=bind \
-    BIND_VERSION=1:9.9.5 \
     DATA_DIR=/data
 
 RUN echo 'APT::Install-Recommends 0;' >> /etc/apt/apt.conf.d/01norecommends \
  && echo 'APT::Install-Suggests 0;' >> /etc/apt/apt.conf.d/01norecommends \
  && apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y vim.tiny wget net-tools sudo net-tools ca-certificates unzip apt-transport-https \
- && rm -rf /var/lib/apt/lists/* && rm -rf /etc/apt/apt.conf.d/docker-gzip-indexes \
- && apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y bind9=${BIND_VERSION}* bind9-host=${BIND_VERSION}* dnsutils \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y vim net-tools bind9 bind9-host dnsutils \
  && rm -rf /var/lib/apt/lists/*
 
 COPY dns/entrypoint.sh /sbin/entrypoint.sh
-COPY dns/named.conf.local /etc/bind
-COPY dns/named.conf.options /etc/bind
-COPY dns/zone.ciab.test /etc/bind
-COPY dns/zone.ip4.arpa /etc/bind
-COPY dns/zone.ip6.arpa /etc/bind
-COPY traffic_ops/to-access.sh /
-COPY enroller/server_template.json /
+COPY dns/named.conf.local dns/named.conf.options dns/zone.ciab.test /etc/bind/
+COPY traffic_ops/to-access.sh enroller/server_template.json /
 
 RUN chmod 755 /sbin/entrypoint.sh
 
