@@ -23,7 +23,7 @@
     {
       "configFile": "CRConfig.json",
       "name": "coveragezone.polling.interval",
-      "value": "3600000"
+      "value": "20000"
     },
     {
       "configFile": "CRConfig.json",

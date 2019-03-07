@@ -96,6 +96,7 @@ services:
       - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
       - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
       - ./traffic_ops/set-to-ips-from-dns.sh:/usr/local/sbin/set-to-ips-from-dns.sh
+      - ./traffic_ops/coverage-zone.json:/opt/traffic_ops/app/public/coverage-zone.json
       - shared:/shared
 
   # trafficportal defines the web interface for Traffic Ops.  It uses only the API exposed by Traffic Ops
@@ -225,6 +226,21 @@ services:
       - ./edge/run.sh:/opt/init.d/99-run.sh
       - shared:/shared
 
+  edge-21:
+    privileged: True
+    build:
+      context: ../..
+      dockerfile: infrastructure/cdn-in-a-box/cache/Dockerfile
+    domainname: infra.ciab.test
+    env_file:
+      - variables.env
+    hostname: edge-21
+    volumes:
+      - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
+      - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
+      - ./edge/run.sh:/opt/init.d/99-run.sh
+      - shared:/shared
+
   # mid cache
   mid:
     privileged: True
@@ -288,12 +304,28 @@ services:
     hostname: dns
     domainname: infra.ciab.test
 
+  dns-21:
+    build:
+      context: .
+      dockerfile: dns/Dockerfile
+    env_file:
+      - variables.env
+    volumes:
+      - ./dns/set-self-dns.sh:/usr/local/sbin/set-self-dns.sh
+      - ./dns/set-dns-update.sh:/usr/local/sbin/set-dns-update.sh
+      - ./dns-edge/named.conf.options:/etc/bind/named.conf.options
+      - ./dns-edge/entrypoint.sh:/sbin/entrypoint.sh
+      - ./dns-edge/zone.ciab.test.template:/zone.ciab.test.template
+      - shared:/shared
+    hostname: dns-21
+    domainname: infra.ciab.test
+
 volumes:
   schemas:
     external: false
   shared:
     external: false
-  content:
-    external: false
-  ca:
-    external: false
+#   content:
+#     external: false
+#   ca:
+#     external: false
