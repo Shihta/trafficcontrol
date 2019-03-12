@@ -307,15 +307,12 @@ services:
   dns-21:
     build:
       context: .
-      dockerfile: dns/Dockerfile
+      dockerfile: dns-edge/Dockerfile
     env_file:
       - variables.env
     volumes:
       - ./dns/set-self-dns.sh:/usr/local/sbin/set-self-dns.sh
       - ./dns/set-dns-update.sh:/usr/local/sbin/set-dns-update.sh
-      - ./dns-edge/named.conf.options:/etc/bind/named.conf.options
-      - ./dns-edge/entrypoint.sh:/sbin/entrypoint.sh
-      - ./dns-edge/zone.ciab.test.template:/zone.ciab.test.template
       - shared:/shared
     hostname: dns-21
     domainname: infra.ciab.test

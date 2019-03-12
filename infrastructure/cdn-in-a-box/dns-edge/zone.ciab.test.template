@@ -16,7 +16,7 @@
 ; under the License.
 
 $ORIGIN ciab.test.
-$TTL 30 
+$TTL 30
 @   IN SOA  dns.infra.ciab.test. hostmaster.ciab.test. (
         0000000001; serial
         7200      ; refresh (2 hours)
