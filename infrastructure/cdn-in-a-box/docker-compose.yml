@@ -95,8 +95,10 @@ services:
       - ./traffic_ops/ca:/ca
       - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
       - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
+      - ./traffic_ops/set-dns-name.sh:/usr/local/sbin/set-dns-name.sh
       - ./traffic_ops/set-to-ips-from-dns.sh:/usr/local/sbin/set-to-ips-from-dns.sh
       - ./traffic_ops/coverage-zone.json:/opt/traffic_ops/app/public/coverage-zone.json
+      - ./traffic_ops_data:/ori_traffic_ops_data
       - shared:/shared
 
   # trafficportal defines the web interface for Traffic Ops.  It uses only the API exposed by Traffic Ops

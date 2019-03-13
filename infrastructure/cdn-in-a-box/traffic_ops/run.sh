@@ -42,6 +42,13 @@ done
 set-dns.sh
 insert-self-into-dns.sh
 
+set -x
+if [ -d "/ori_traffic_ops_data" ]; then
+  cp -r /ori_traffic_ops_data/* /traffic_ops_data
+fi
+set +x
+
+set-dns-name.sh
 set-to-ips-from-dns.sh
 
 # Source to-access functions and FQDN vars
