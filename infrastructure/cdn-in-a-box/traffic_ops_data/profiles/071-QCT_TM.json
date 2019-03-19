@@ -1,8 +1,8 @@
 {
-  "cdnName": "$CDN_NAME",
-  "description": "Traffic Monitor for CDN-in-a-Box",
-  "name": "RASCAL-Traffic_Monitor",
+  "description": "Traffic Monitor for QCT-CDN",
+  "name": "TM_QCT",
   "type": "TM_PROFILE",
+  "cdnName": "QCT-CDN",
   "params": [
     {
       "configFile": "rascal-config.txt",

@@ -1,0 +1,5 @@
+{
+	"dnssecEnabled": false,
+	"domainName": "cdn.shida.info",
+	"name": "QCT-CDN"
+}

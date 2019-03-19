@@ -1,9 +1,9 @@
 {
-  "cdnName": "$CDN_NAME",
-  "description": "Traffic Router for CDN-In-A-Box",
-  "name": "CCR_CIAB",
+  "description": "Traffic Router for QCT-CDN",
+  "name": "TR_QCT",
   "routingDisabled": false,
   "type": "TR_PROFILE",
+  "cdnName": "QCT-CDN",
   "params": [
     {
       "configFile": "inputs.conf",
@@ -74,11 +74,6 @@
       "configFile": "server.xml",
       "name": "api.port",
       "value": "3333"
-    },
-    {
-      "configFile": "server.xml",
-      "name": "secure.api.port",
-      "value": "3443"
     },
     {
       "configFile": "CRConfig.json",

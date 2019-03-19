@@ -138,6 +138,7 @@ to-delete() {
 #         MY_CACHE_GROUP - the cache group, default is "CDN_in_a_Box_Edge"
 #         MY_TCP_PORT - the tcp port, default is "80"
 #         MY_HTTPS_PORT - the tcp port, default is "443"
+#         MY_PROFILE - the profile
 to-enroll() {
 
 	# Force fflush() on /shared 
@@ -202,53 +203,93 @@ to-enroll() {
 	case "$serverType" in
 		"edge" )
 			export MY_TYPE="EDGE"
-			export MY_PROFILE="ATS_EDGE_TIER_CACHE"
 			export MY_STATUS="REPORTED"
+			if [[ ! -z "$6" ]]; then
+				export MY_PROFILE="$6"
+			else
+				export MY_PROFILE="ATS_EDGE_TIER_CACHE"
+			fi
 			;;
 		"mid" )
 			export MY_TYPE="MID"
-			export MY_PROFILE="ATS_MID_TIER_CACHE"
 			export MY_STATUS="REPORTED"
+			if [[ ! -z "$6" ]]; then
+				export MY_PROFILE="$6"
+			else
+				export MY_PROFILE="ATS_MID_TIER_CACHE"
+			fi
 			;;
 		"tm" )
 			export MY_TYPE="RASCAL"
-			export MY_PROFILE="RASCAL-Traffic_Monitor"
 			export MY_STATUS="ONLINE"
+			if [[ ! -z "$6" ]]; then
+				export MY_PROFILE="$6"
+			else
+				export MY_PROFILE="RASCAL-Traffic_Monitor"
+			fi
 			;;
 		"to" )
 			export MY_TYPE="TRAFFIC_OPS"
-			export MY_PROFILE="TRAFFIC_OPS"
 			export MY_STATUS="ONLINE"
+			if [[ ! -z "$6" ]]; then
+				export MY_PROFILE="$6"
+			else
+				export MY_PROFILE="TRAFFIC_OPS"
+			fi
 			;;
 		"tr" )
 			export MY_TYPE="CCR"
-			export MY_PROFILE="CCR_CIAB"
 			export MY_STATUS="ONLINE"
+			if [[ ! -z "$6" ]]; then
+				export MY_PROFILE="$6"
+			else
+				export MY_PROFILE="CCR_CIAB"
+			fi
 			;;
 		"tp" )
 			export MY_TYPE="TRAFFIC_PORTAL"
-			export MY_PROFILE="TRAFFIC_PORTAL"
 			export MY_STATUS="ONLINE"
+			if [[ ! -z "$6" ]]; then
+				export MY_PROFILE="$6"
+			else
+				export MY_PROFILE="TRAFFIC_PORTAL"
+			fi
 			;;
 		"ts" )
 			export MY_TYPE="TRAFFIC_STATS"
-			export MY_PROFILE="TRAFFIC_STATS"
 			export MY_STATUS="ONLINE"
+			if [[ ! -z "$6" ]]; then
+				export MY_PROFILE="$6"
+			else
+				export MY_PROFILE="TRAFFIC_STATS"
+			fi
 			;;
 		"tv" )
 			export MY_TYPE="RIAK"
-			export MY_PROFILE="RIAK_ALL"
 			export MY_STATUS="ONLINE"
+			if [[ ! -z "$6" ]]; then
+				export MY_PROFILE="$6"
+			else
+				export MY_PROFILE="RIAK_ALL"
+			fi
 			;;
 		"influxdb" )
 			export MY_TYPE="INFLUXDB"
-			export MY_PROFILE="INFLUXDB"
 			export MY_STATUS="ONLINE"
+			if [[ ! -z "$6" ]]; then
+				export MY_PROFILE="$6"
+			else
+				export MY_PROFILE="INFLUXDB"
+			fi
 			;;
 		"grafana" )
 			export MY_TYPE="GRAFANA"
-			export MY_PROFILE="GRAFANA"
 			export MY_STATUS="ONLINE"
+			if [[ ! -z "$6" ]]; then
+				export MY_PROFILE="$6"
+			else
+				export MY_PROFILE="GRAFANA"
+			fi
 			;;
 		* )
 			echo "Usage: to-enroll SERVER_TYPE" >&2
