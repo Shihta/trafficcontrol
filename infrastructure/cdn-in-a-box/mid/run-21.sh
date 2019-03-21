@@ -53,29 +53,21 @@ found=
 while [[ -z $found ]]; do
     echo 'waiting for enroller setup'
     sleep 3
-    found=$(to-get "api/1.3/cdns?name=$CDN_NAME" | jq -r '.response[].name')
+    found=$(to-get api/1.3/cdns?name="$CDN_NAME" | jq -r '.response[].name')
 done
 
-to-enroll edge $CDN_NAME "QCT_CG_Edge" "" "" "QCT_EDGE_TIER_CACHE" || (while true; do echo "enroll failed."; sleep 3 ; done)
+to-enroll mid $CDN_NAME "QCT_CG_Mid" "" "" "QCT_MID_TIER_CACHE" || (while true; do echo "enroll failed."; sleep 3 ; done)
 
 while [[ -z "$(testenrolled)" ]]; do
 	echo "waiting on enrollment"
 	sleep 3
 done
 
-to-add-sslkeys $CDN_NAME "st" "*.st.cdn.shida.info" "/ssl/certificate.crt" "/ssl/st.cdn.shida.info.csr" "/ssl/st.cdn.shida.info.key"
-
-# Wait for SSL keys to exist
-until to-get "api/1.3/cdns/name/$CDN_NAME/sslkeys" && [[ "$(to-get api/1.3/cdns/name/$CDN_NAME/sslkeys)" != '{"response":[]}' ]]; do
-	echo 'waiting for SSL keys to exist'
-	sleep 3
-done
-
 # Leaves the container hanging open in the event of a failure for debugging purposes
-traffic_ops_ort -kl ALL BADASS || { echo "Failed"; }
+traffic_ops_ort -k BADASS ALL "https://$TO_FQDN:$TO_PORT" "$TO_ADMIN_USER:$TO_ADMIN_PASSWORD" || { echo "Failed"; }
 
-envsubst < "/etc/cron.d/traffic_ops_ort-cron-template" > "/var/spool/cron/root" && rm -f "/etc/cron.d/traffic_ops_ort-cron-template"
-crontab "/var/spool/cron/root"
+envsubst < "/etc/cron.d/traffic_ops_ort-cron-template" > "/etc/cron.d/traffic_ops_ort-cron" && rm -f "/etc/cron.d/traffic_ops_ort-cron-template"
+chmod "0644" "/etc/cron.d/traffic_ops_ort-cron" && crontab "/etc/cron.d/traffic_ops_ort-cron"
 
 crond -im off
 

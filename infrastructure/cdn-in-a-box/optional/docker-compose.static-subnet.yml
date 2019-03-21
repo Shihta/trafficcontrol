@@ -28,7 +28,7 @@ networks:
         - subnet: 10.103.11.0/24
           gateway: 10.103.11.1
           ip_range: 10.103.11.128/28
-  edge-21:
+  edge-network-21:
     driver: macvlan
     driver_opts:
       parent: enp61s0f1
@@ -48,6 +48,9 @@ services:
     cpuset: "0-7,16-23"
   trafficportal:
     cpuset: "0-7,16-23"
+    networks:
+      default:
+        ipv4_address: 10.103.11.126
   trafficmonitor:
     cpuset: "0-7,16-23"
   trafficrouter:
@@ -62,9 +65,14 @@ services:
     cpuset: "0-7,16-23"
     dns: 10.103.11.127
     networks:
-      edge-21:
+      edge-network-21:
   mid:
     cpuset: "0-7,16-23"
+  mid-21:
+    cpuset: "0-7,16-23"
+    dns: 10.103.11.127
+    networks:
+      edge-network-21:
   origin:
     cpuset: "0-7,16-23"
   dns:
@@ -76,6 +84,6 @@ services:
     cpuset: "0-7,16-23"
     dns: 10.103.11.127
     networks:
-      edge-21:
+      edge-network-21:
         ipv4_address: 10.103.21.127
 

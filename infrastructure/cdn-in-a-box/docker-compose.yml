@@ -236,11 +236,14 @@ services:
     domainname: infra.ciab.test
     env_file:
       - variables.env
+    environment:
+      - CDN_NAME=QCT-CDN
     hostname: edge-21
     volumes:
       - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
       - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
-      - ./edge/run.sh:/opt/init.d/99-run.sh
+      - ./edge/run-21.sh:/opt/init.d/99-run.sh
+      - ./traffic_ops/ca/cdn.shida.info:/ssl
       - shared:/shared
 
   # mid cache
@@ -257,6 +260,23 @@ services:
       - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
       - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
       - ./mid/run.sh:/opt/init.d/99-run.sh
+      - shared:/shared
+
+  mid-21:
+    privileged: True
+    build:
+      context: ../..
+      dockerfile: infrastructure/cdn-in-a-box/cache/Dockerfile
+    domainname: infra.ciab.test
+    env_file:
+      - variables.env
+    environment:
+      - CDN_NAME=QCT-CDN
+    hostname: mid-21
+    volumes:
+      - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
+      - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
+      - ./mid/run-21.sh:/opt/init.d/99-run.sh
       - shared:/shared
 
   # origin provides the content to be distributed through the CDN caches

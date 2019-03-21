@@ -3,7 +3,7 @@
     "displayName": "st 1",
     "tenant": "root",
     "cdnName": "QCT-CDN",
-    "protocol": 0,
+    "protocol": 2,
     "orgServerFqdn": "http://tsvideo.shida.info",
     "type": "DNS",
     "active": true,
