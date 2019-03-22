@@ -140,6 +140,26 @@ services:
     hostname: trafficmonitor
     image: trafficmonitor
 
+  trafficmonitor-21:
+    build:
+      context: .
+      dockerfile: traffic_monitor/Dockerfile
+      args:
+        TRAFFIC_MONITOR_RPM: traffic_monitor/traffic_monitor.rpm
+    depends_on:
+      - enroller
+    volumes:
+      - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
+      - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
+      - ./traffic_monitor/run-21.sh:/run.sh
+      - shared:/shared
+    domainname: infra.ciab.test
+    env_file:
+      - variables.env
+    environment:
+      - CDN_NAME=QCT-CDN
+    hostname: trafficmonitor-21
+
   # trafficrouter routes clients to the most optimal cache
   trafficrouter:
     build:
