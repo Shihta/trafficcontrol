@@ -81,6 +81,6 @@ crond -im off
 
 touch /var/log/trafficserver/diags.log
 if [[ "$AUTO_SNAPQUEUE_ENABLED" = true ]]; then
-  to-auto-snapqueue "edge-21,mid-21,trafficmonitor-21" $CDN_NAME
+  to-auto-snapqueue "edge-21,mid-21,trafficmonitor-21,trafficrouter-21" $CDN_NAME
 fi
 tail -Fn +1 /var/log/trafficserver/diags.log

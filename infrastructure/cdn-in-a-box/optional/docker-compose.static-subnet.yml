@@ -53,8 +53,19 @@ services:
         ipv4_address: 10.103.11.126
   trafficmonitor:
     cpuset: "0-7,16-23"
+  trafficmonitor-21:
+    cpuset: "0-7,16-23"
+    dns: 10.103.11.127
+    networks:
+      edge-network-21:
   trafficrouter:
     cpuset: "0-7,16-23"
+  trafficrouter-21:
+    cpuset: "0-7,16-23"
+    dns: 10.103.11.127
+    networks:
+      edge-network-21:
+        ipv4_address: 10.103.21.95
   influxdb:
     cpuset: "0-7,16-23"
   trafficvault:
@@ -66,6 +77,7 @@ services:
     dns: 10.103.11.127
     networks:
       edge-network-21:
+        ipv4_address: 10.103.21.94
   mid:
     cpuset: "0-7,16-23"
   mid-21:

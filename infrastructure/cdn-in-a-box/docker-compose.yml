@@ -179,6 +179,28 @@ services:
       - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
       - shared:/shared
 
+  trafficrouter-21:
+    build:
+      context: .
+      dockerfile: traffic_router/Dockerfile
+      args:
+        TRAFFIC_ROUTER_RPM: traffic_router/traffic_router.rpm
+        TOMCAT_RPM: traffic_router/tomcat.rpm
+    depends_on:
+      - enroller
+    domainname: infra.ciab.test
+    env_file:
+      - variables.env
+    environment:
+      - CDN_NAME=QCT-CDN
+      - TM_HOST=trafficmonitor-21
+    hostname: trafficrouter-21
+    volumes:
+      - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
+      - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
+      - ./traffic_router/run-21.sh:/run.sh
+      - shared:/shared
+
   # trafficstats collect traffic information
   trafficstats:
     build:
