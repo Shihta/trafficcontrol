@@ -139,6 +139,7 @@ to-delete() {
 #         MY_TCP_PORT - the tcp port, default is "80"
 #         MY_HTTPS_PORT - the tcp port, default is "443"
 #         MY_PROFILE - the profile
+#         MY_IP
 to-enroll() {
 
 	# Force fflush() on /shared 
@@ -191,8 +192,12 @@ to-enroll() {
 
 	export MY_NET_INTERFACE='eth0'
 	export MY_DOMAINNAME="$(dnsdomainname)"
-	MY_IP="$(ifconfig $MY_NET_INTERFACE | grep 'inet ' | tr -s ' ' | cut -d ' ' -f 3)"
-	export MY_IP=${MY_IP#"addr:"}
+	if [[ ! -z "$7" ]]; then
+		export MY_IP="$7"
+	else
+		MY_IP="$(ifconfig $MY_NET_INTERFACE | grep 'inet ' | tr -s ' ' | cut -d ' ' -f 3)"
+		export MY_IP=${MY_IP#"addr:"}
+	fi
 	export MY_GATEWAY="$(route -n | grep $MY_NET_INTERFACE | grep -E '^0\.0\.0\.0' | tr -s ' ' | cut -d ' ' -f2)"
 	MY_NETMASK="$(ifconfig $MY_NET_INTERFACE | grep 'inet ' | tr -s ' ' | cut -d ' ' -f 5)"
 	export MY_NETMASK=${MY_NETMASK#"Mask:"}

@@ -368,18 +368,18 @@ services:
     hostname: dns
     domainname: infra.ciab.test
 
-  dns-21:
-    build:
-      context: .
-      dockerfile: dns-edge/Dockerfile
-    env_file:
-      - variables.env
-    volumes:
-      - ./dns/set-self-dns.sh:/usr/local/sbin/set-self-dns.sh
-      - ./dns/set-dns-update.sh:/usr/local/sbin/set-dns-update.sh
-      - shared:/shared
-    hostname: dns-21
-    domainname: infra.ciab.test
+#   dns-21:
+#     build:
+#       context: .
+#       dockerfile: dns-edge/Dockerfile
+#     env_file:
+#       - variables.env
+#     volumes:
+#       - ./dns/set-self-dns.sh:/usr/local/sbin/set-self-dns.sh
+#       - ./dns/set-dns-update.sh:/usr/local/sbin/set-dns-update.sh
+#       - shared:/shared
+#     hostname: dns-21
+#     domainname: infra.ciab.test
 
 volumes:
   schemas:

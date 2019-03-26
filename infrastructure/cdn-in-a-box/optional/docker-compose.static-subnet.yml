@@ -22,7 +22,7 @@ networks:
   default:
     driver: macvlan
     driver_opts:
-      parent: enp61s0f0
+      parent: vlan1311
     ipam:
       config:
         - subnet: 10.103.11.0/24
@@ -31,71 +31,55 @@ networks:
   edge-network-21:
     driver: macvlan
     driver_opts:
-      parent: enp61s0f1
+      parent: vlan1321
     ipam:
       config:
         - subnet: 10.103.21.0/24
           gateway: 10.103.21.1
-          ip_range: 10.103.21.128/28
+          ip_range: 10.103.21.80/28
 
 
 services:
   db:
-    cpuset: "0-7,16-23"
   trafficops:
-    cpuset: "0-7,16-23"
+    dns: 10.103.11.127
+    networks:
+      edge-network-21:
+        ipv4_address: 10.103.21.93
   trafficops-perl:
-    cpuset: "0-7,16-23"
   trafficportal:
-    cpuset: "0-7,16-23"
     networks:
       default:
         ipv4_address: 10.103.11.126
   trafficmonitor:
-    cpuset: "0-7,16-23"
   trafficmonitor-21:
-    cpuset: "0-7,16-23"
-    dns: 10.103.11.127
-    networks:
-      edge-network-21:
   trafficrouter:
-    cpuset: "0-7,16-23"
   trafficrouter-21:
-    cpuset: "0-7,16-23"
     dns: 10.103.11.127
     networks:
       edge-network-21:
         ipv4_address: 10.103.21.95
   influxdb:
-    cpuset: "0-7,16-23"
   trafficvault:
-    cpuset: "0-7,16-23"
   edge:
-    cpuset: "0-7,16-23"
   edge-21:
-    cpuset: "0-7,16-23"
     dns: 10.103.11.127
     networks:
       edge-network-21:
         ipv4_address: 10.103.21.94
   mid:
-    cpuset: "0-7,16-23"
   mid-21:
-    cpuset: "0-7,16-23"
     dns: 10.103.11.127
     networks:
       edge-network-21:
   origin:
-    cpuset: "0-7,16-23"
   dns:
-    cpuset: "0-7,16-23"
     networks:
       default:
         ipv4_address: 10.103.11.127
-  dns-21:
-    cpuset: "0-7,16-23"
-    dns: 10.103.11.127
-    networks:
-      edge-network-21:
-        ipv4_address: 10.103.21.127
+#   dns-21:
+#     dns: 10.103.11.127
+#     networks:
+#       edge-network-21:
+#         ipv4_address: 10.103.21.127
 

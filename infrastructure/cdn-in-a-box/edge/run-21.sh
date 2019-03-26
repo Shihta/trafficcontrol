@@ -56,7 +56,7 @@ while [[ -z $found ]]; do
     found=$(to-get "api/1.3/cdns?name=$CDN_NAME" | jq -r '.response[].name')
 done
 
-to-enroll edge $CDN_NAME "QCT_CG_Edge" "" "" "QCT_EDGE_TIER_CACHE" || (while true; do echo "enroll failed."; sleep 3 ; done)
+to-enroll edge $CDN_NAME "QCT_CG_Edge" "" "" "QCT_EDGE_TIER_CACHE" "60.248.18.204" || (while true; do echo "enroll failed."; sleep 3 ; done)
 
 while [[ -z "$(testenrolled)" ]]; do
 	echo "waiting on enrollment"
