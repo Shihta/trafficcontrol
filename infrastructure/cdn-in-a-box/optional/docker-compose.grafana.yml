@@ -57,4 +57,7 @@ volumes:
   schemas:
     external: false
   shared:
-    external: false
+    driver_opts:
+      type: nfs
+      o: addr=10.103.11.11,rw,sync
+      device: 10.103.11.11:/mnt/qctrd2/shihta/cdn

@@ -131,6 +131,32 @@ to-delete() {
 		curl $CURLAUTH $CURLOPTS --cookie "$COOKIEJAR" -X DELETE "$TO_URL/$1"
 }
 
+# args:
+#     cachegroup
+#     profile
+#     type
+#     status
+to-setenv-before-enroll() {
+    cdn_id=$(to-get "api/1.4/cdns?name=$CDN_NAME" | jq '.response[0].id')
+    export MY_CDN_ID=$cdn_id
+    while true; do
+        cachegroup_id=$(to-get "api/1.4/cachegroups?name=$1" | jq '.response[0].id')
+        if [ ! "$cachegroup_id" == "null" ]; then
+            export MY_CACHE_GROUP_ID=$cachegroup_id
+            break
+        else
+            echo "cachegroup_id = null, retry"
+            sleep 2
+        fi
+    done
+    profile_id=$(to-get "api/1.4/profiles?name=$2" | jq '.response[0].id')
+    export MY_PROFILE_ID=$profile_id
+    type_id=$(to-get "api/1.4/types?name=$3" | jq '.response[0].id')
+    export MY_TYPE_ID=$type_id
+    status_id=$(to-get "api/1.4/statuses?name=$4" | jq '.response[0].id')
+    export MY_STATUS_ID=$status_id
+}
+
 # Constructs a server's JSON definiton and places it into the enroller's structure for loading
 # args:
 #         serverType - the type of the server to be created; one of "edge", "mid", "tm"
@@ -140,6 +166,7 @@ to-delete() {
 #         MY_HTTPS_PORT - the tcp port, default is "443"
 #         MY_PROFILE - the profile
 #         MY_IP
+#         MY_DOMAINNAME
 to-enroll() {
 
 	# Force fflush() on /shared 
@@ -191,7 +218,11 @@ to-enroll() {
 	fi
 
 	export MY_NET_INTERFACE='eth0'
-	export MY_DOMAINNAME="$(dnsdomainname)"
+	if [[ ! -z "$8" ]]; then
+		export MY_DOMAINNAME="$8"
+	else
+		export MY_DOMAINNAME="$(dnsdomainname)"
+	fi
 	if [[ ! -z "$7" ]]; then
 		export MY_IP="$7"
 	else

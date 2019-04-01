@@ -1,0 +1,88 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+---
+version: '2.1'
+
+services:
+  edge-tm-0:
+    dns: 10.103.11.127
+    build:
+      context: .
+      dockerfile: traffic_monitor/Dockerfile
+      args:
+        TRAFFIC_MONITOR_RPM: traffic_monitor/traffic_monitor.rpm
+    ports:
+      - "10080:10080"
+    volumes:
+      - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
+      - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
+      - ./traffic_monitor/edge-tm-0.sh:/run.sh
+      - ./edge/server_template.json:/server_template.json
+      - shared:/shared
+    domainname: infra.ciab.test
+    env_file:
+      - variables.env
+    environment:
+      - CDN_NAME=QCT-CDN
+      - TM_PORT=10080
+      - MY_IP=10.2.254.95
+    hostname: edge-tm-0
+
+  edge-ecache-0:
+    privileged: True
+    dns: 10.103.11.127
+    build:
+      context: ../..
+      dockerfile: infrastructure/cdn-in-a-box/cache/Dockerfile
+    domainname: infra.ciab.test
+    env_file:
+      - variables.env
+    environment:
+      - CDN_NAME=QCT-CDN
+#     entrypoint: tail -f /dev/null
+    hostname: edge-ecache-0
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
+      - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
+      - ./edge/jsons:/opt/jsons
+      - ./edge/edge-ecache-0.sh:/opt/init.d/99-run.sh
+      - ./edge/server_template.json:/server_template.json
+      - shared:/shared
+
+  edge-dns-0:
+    dns: 10.103.11.127
+    build:
+      context: .
+      dockerfile: dns-edge/Dockerfile
+    env_file:
+      - variables.env
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+
+volumes:
+  schemas:
+    external: false
+  shared:
+    driver_opts:
+      type: nfs
+      o: addr=10.103.11.11,rw,sync
+      device: 10.103.11.11:/mnt/qctrd2/shihta/cdn
