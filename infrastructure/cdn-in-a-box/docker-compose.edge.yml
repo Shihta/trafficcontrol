@@ -40,7 +40,7 @@ services:
     environment:
       - CDN_NAME=QCT-CDN
       - TM_PORT=10080
-      - MY_IP=10.2.254.95
+      - MY_IP=10.103.3.35
     hostname: edge-tm-0
 
   edge-ecache-0:
@@ -68,7 +68,6 @@ services:
       - shared:/shared
 
   edge-dns-0:
-    dns: 10.103.11.127
     build:
       context: .
       dockerfile: dns-edge/Dockerfile
@@ -77,6 +76,15 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
+    privileged: true
+    volumes:
+      - ./dns-edge/GCP-TW-phone.tblk:/ovpn
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.20.20.0/24
 
 volumes:
   schemas:
@@ -84,5 +92,5 @@ volumes:
   shared:
     driver_opts:
       type: nfs
-      o: addr=10.103.11.11,rw,sync
-      device: 10.103.11.11:/mnt/qctrd2/shihta/cdn
+      o: addr=10.103.3.8,rw,sync
+      device: 10.103.3.8:/root/nfs

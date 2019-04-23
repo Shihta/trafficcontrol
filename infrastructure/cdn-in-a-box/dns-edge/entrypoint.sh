@@ -34,22 +34,11 @@ create_bind_cache_dir() {
 create_pid_dir
 create_bind_cache_dir
 
-cp /zone.ciab.test.template /etc/bind/zone.ciab.test
-DIG_IP_RETRY=10
-
-for service_hostname in dns trafficrouter; do
-  for (( i=1; i<=DIG_IP_RETRY; i++ )); do
-    service_ip="$(dig +short ${service_hostname} A)"
-    if [ -z "${service_ip}" ]; then
-      printf "service \"${service_hostname}\" not found in dns, count=$i, waiting ...\n"
-      sleep 3
-    else
-      break
-    fi
-  done
-  echo $n
-  sed -i "s/${service_hostname}_dynamic_ip/${service_ip}/" /etc/bind/zone.ciab.test
-done
+cd /ovpn
+openvpn stphone.ovpn &
+cd -
+route add -net 172.26.0.0/16 gw 172.20.20.1
+route add -net 11.1.4.0/24 gw 172.20.20.1
 
 # allow arguments to be passed to named
 if [[ ${1:0:1} = '-' ]]; then

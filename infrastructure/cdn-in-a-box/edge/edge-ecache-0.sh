@@ -63,7 +63,7 @@ echo $ret
 
 to-setenv-before-enroll "QCT_CG_Edge_Remote_0" "QCT_EDGE_TIER_CACHE" "EDGE" "REPORTED"
 
-to-enroll edge $CDN_NAME "QCT_CG_Edge_Remote_0" "" "" "QCT_EDGE_TIER_CACHE" || (while true; do echo "enroll failed."; sleep 3 ; done)
+to-enroll edge $CDN_NAME "QCT_CG_Edge_Remote_0" "" "" "QCT_EDGE_TIER_CACHE" "192.168.1.10" || (while true; do echo "enroll failed."; sleep 3 ; done)
 
 hn=$(hostname -s)
 cat /shared/enroller/servers/${hn}.json

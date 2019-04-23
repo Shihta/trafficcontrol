@@ -51,7 +51,6 @@ services:
       - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
     env_file:
       - variables.env
-    # TODO: change to expose: "5432" to limit to containers
 
   # trafficops runs only the Go version of Traffic Ops in a container.  All Traffic Ops API endpoints that have
   # been rewritten in Go will be handled here.  All that have not are passed to the trafficops-perl service
@@ -69,6 +68,8 @@ services:
       - variables.env
     hostname: trafficops
     image: trafficops-go
+    extra_hosts:
+      - "trafficrouter-21.cdn.shida.info:10.103.21.95"
     volumes:
       - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
       - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
@@ -90,7 +91,8 @@ services:
       - variables.env
     hostname: trafficops-perl
     image: trafficops-perl
-    # TODO: change to expose: "60443" to limit to containers
+    extra_hosts:
+      - "trafficrouter-21.cdn.shida.info:10.103.21.95"
     volumes:
       - ./traffic_ops/ca:/ca
       - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
@@ -284,6 +286,7 @@ services:
     volumes:
       - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
       - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
+      - ./edge/iptables.sh:/opt/init.d/98-iptables.sh
       - ./edge/run-21.sh:/opt/init.d/99-run.sh
       - ./traffic_ops/ca/cdn.shida.info:/ssl
       - shared:/shared
@@ -387,8 +390,8 @@ volumes:
   shared:
     driver_opts:
       type: nfs
-      o: addr=10.103.11.11,rw,sync
-      device: 10.103.11.11:/mnt/qctrd2/shihta/cdn
+      o: addr=10.103.3.8,rw,sync
+      device: 10.103.3.8:/root/nfs
 #   content:
 #     external: false
 #   ca:

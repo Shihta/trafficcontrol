@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -14,22 +16,16 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-FROM ubuntu:18.04
 
-ENV BIND_USER=bind
+set -x
 
-RUN apt-get update && \
-    apt-get install -y vim net-tools bind9 dnsutils openvpn iputils-ping && \
-    rm -rf /var/lib/apt/lists/*
-
-COPY dns/named.conf.local \
-     dns-edge/named.conf.options \
-     /etc/bind/
-COPY traffic_ops/to-access.sh \
-     enroller/server_template.json \
-     dns-edge/entrypoint.sh \
-     /
-
-EXPOSE 53/udp 53/tcp
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/usr/sbin/named"]
+iptables -F
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 60.248.0.0/16 -j ACCEPT
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 118.160.0.0/13 -j ACCEPT
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 42.64.0.0/12 -j ACCEPT
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 10.0.0.0/8 -j ACCEPT
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 127.0.0.0/8 -j ACCEPT
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 172.16.0.0/12 -j ACCEPT
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 192.168.0.0/16 -j ACCEPT
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -j DROP
+# iptables -L -nv

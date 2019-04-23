@@ -44,6 +44,9 @@ services:
       dockerfile: optional/grafana/Dockerfile
     hostname: grafana
     domainname: infra.ciab.test
+    networks:
+      default:
+        ipv4_address: 10.103.11.125
     depends_on:
       - influxdb
     env_file:
@@ -59,5 +62,5 @@ volumes:
   shared:
     driver_opts:
       type: nfs
-      o: addr=10.103.11.11,rw,sync
-      device: 10.103.11.11:/mnt/qctrd2/shihta/cdn
+      o: addr=10.103.3.8,rw,sync
+      device: 10.103.3.8:/root/nfs
