@@ -58,5 +58,5 @@ WORKDIR /opt
 RUN touch /var/log/ort.log && pip3 install ./Apache-TrafficControl && pip3 install ./ort && cp ort/traffic_ops_ort.crontab /etc/cron.d/traffic_ops_ort-cron-template && mkdir -p /opt/init.d && cp ort/traffic_ops_ort.logrotate /etc/logrotate.d/ort && td-agent-gem install elasticsearch
 
 ADD infrastructure/cdn-in-a-box/cache/run.sh infrastructure/cdn-in-a-box/traffic_ops/to-access.sh infrastructure/cdn-in-a-box/enroller/server_template.json /
-ADD infrastructure/cdn-in-a-box/cache/td-agent-extended2.tmp /etc/trafficserver/
+ADD infrastructure/cdn-in-a-box/cache/td-agent-extended2.tmp infrastructure/cdn-in-a-box/cache/logging.config /etc/trafficserver/
 CMD /run.sh
