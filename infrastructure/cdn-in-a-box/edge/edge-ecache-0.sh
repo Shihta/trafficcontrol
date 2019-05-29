@@ -95,4 +95,8 @@ echo $ret
 if [[ "$AUTO_SNAPQUEUE_ENABLED" = true ]]; then
   to-auto-snapqueue "edge-ecache-0,edge-tm-0" $CDN_NAME
 fi
+
+envsubst < /etc/trafficserver/td-agent-extended2.tmp > /etc/trafficserver/td-agent-extended2.conf
+td-agent -c /etc/trafficserver/td-agent-extended2.conf &
+
 tail -Fn +1 /var/log/trafficserver/diags.log

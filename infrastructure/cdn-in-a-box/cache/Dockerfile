@@ -27,9 +27,11 @@ EXPOSE 80
 
 ADD https://ci.trafficserver.apache.org/RPMS/CentOS7/trafficserver-7.1.4-2.el7.x86_64.rpm /trafficserver.rpm
 ADD https://ci.trafficserver.apache.org/RPMS/CentOS7/trafficserver-devel-7.1.4-2.el7.x86_64.rpm /trafficserver-devel.rpm
+ADD infrastructure/cdn-in-a-box/cache/td.repo /etc/yum.repos.d/td.repo
 
 RUN yum install -y bind-utils kyotocabinet-libs epel-release initscripts iproute net-tools nmap-ncat gettext autoconf automake libtool gcc-c++ cronie glibc-devel openssl-devel
-RUN yum install -y /trafficserver.rpm /trafficserver-devel.rpm jq python36-psutil python36-typing python36-setuptools python36-pip logrotate iftop && yum clean all
+RUN rpm --import https://packages.treasuredata.com/GPG-KEY-td-agent && \
+    yum install -y /trafficserver.rpm /trafficserver-devel.rpm jq python36-psutil python36-typing python36-setuptools python36-pip iftop logrotate td-agent && yum clean all
 RUN pip3 install --upgrade pip && pip3 install requests urllib3 distro
 
 ADD traffic_server/plugins/astats_over_http/astats_over_http.c traffic_server/plugins/astats_over_http/Makefile.am /
@@ -53,7 +55,8 @@ ADD traffic_control/clients/python /opt/Apache-TrafficControl/
 
 WORKDIR /opt
 
-RUN touch /var/log/ort.log && pip3 install ./Apache-TrafficControl && pip3 install ./ort && cp ort/traffic_ops_ort.crontab /etc/cron.d/traffic_ops_ort-cron-template && mkdir -p /opt/init.d && cp ort/traffic_ops_ort.logrotate /etc/logrotate.d/ort
+RUN touch /var/log/ort.log && pip3 install ./Apache-TrafficControl && pip3 install ./ort && cp ort/traffic_ops_ort.crontab /etc/cron.d/traffic_ops_ort-cron-template && mkdir -p /opt/init.d && cp ort/traffic_ops_ort.logrotate /etc/logrotate.d/ort && td-agent-gem install elasticsearch
 
 ADD infrastructure/cdn-in-a-box/cache/run.sh infrastructure/cdn-in-a-box/traffic_ops/to-access.sh infrastructure/cdn-in-a-box/enroller/server_template.json /
+ADD infrastructure/cdn-in-a-box/cache/td-agent-extended2.tmp /etc/trafficserver/
 CMD /run.sh

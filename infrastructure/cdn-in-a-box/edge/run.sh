@@ -87,4 +87,8 @@ until grep -q demo1 /etc/trafficserver/remap.config; do
 done
 
 touch /var/log/trafficserver/diags.log
+
+envsubst < /etc/trafficserver/td-agent-extended2.tmp > /etc/trafficserver/td-agent-extended2.conf
+td-agent -c /etc/trafficserver/td-agent-extended2.conf &
+
 tail -Fn +1 /var/log/trafficserver/diags.log

@@ -77,4 +77,8 @@ chmod "0644" "/etc/cron.d/traffic_ops_ort-cron" && crontab "/etc/cron.d/traffic_
 crond -im off
 
 touch /var/log/trafficserver/diags.log
+
+envsubst < /etc/trafficserver/td-agent-extended2.tmp > /etc/trafficserver/td-agent-extended2.conf
+td-agent -c /etc/trafficserver/td-agent-extended2.conf &
+
 tail -Fn +1 /var/log/trafficserver/diags.log

@@ -1,0 +1,95 @@
+<source>
+  @type tail
+  path /var/log/trafficserver/extended2.log
+  pos_file /var/log/trafficserver/extended2.log.pos
+  @log_level debug
+  tag cdn.extended2
+  <parse>
+    @type regexp
+    expression /^(?<chi>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\s-\s(?<caun>.+)\s\[(?<cqtd_date>[0-9]{2})/(?<cqtd_month>.+)/(?<cqtd_year>[0-9]{4}):(?<cqtd_time>[0-9]{2}:[0-9]{2}:[0-9]{2}).*\]\s"(?<cqtx_method>.+)\s(?<cqtx_url>.+)\s(?<cqtx_version>.+)"\s(?<pssc>[0-9]+)\s(?<pscl>[0-9]+)\s(?<sssc>[0-9]+)\s(?<sscl>[0-9]+)\s(?<cqcl>[0-9]+)\s(?<pqcl>[0-9]+)\s(?<cqhl>[0-9]+)\s(?<pshl>[0-9]+)\s(?<pqhl>[0-9]+)\s(?<sshl>[0-9]+)\s(?<tts>[0-9]+)\s(?<phr>.+)\s(?<cfsc>.+)\s(?<pfsc>.+)\s(?<crc>.+)\s"(?<referer>.+)"\s"(?<user-agent>.+)"$/i
+  </parse>
+</source>
+
+<filter cdn.extended2>
+  @type record_transformer
+  enable_ruby
+  <record>
+    month ${case record["cqtd_month"] when "Jan" then "01" when "Feb" then "02" when "Mar" then "03" when "Apr" then "04" when "May" then "05" when "Jun" then "06" when "Jul" then "07" when "Aug" then "08" when "Sep" then "09" when "Oct" then "10" when "Nov" then "11" when "Dec" then "12" else "00" end}
+  </record>
+</filter>
+
+<filter cdn.extended2>
+  @type record_transformer
+  <record>
+    timestamp ${record["cqtd_year"]}-${record["month"]}-${record["cqtd_date"]}T${record["cqtd_time"]}
+  </record>
+</filter>
+
+<filter cdn.extended2>
+  @type parser
+  key_name cqtd_year
+  reserve_data true
+  remove_key_name_field true
+  <parse>
+    @type none
+  </parse>
+</filter>
+
+<filter cdn.extended2>
+  @type parser
+  key_name cqtd_month
+  reserve_data true
+  remove_key_name_field true
+  <parse>
+    @type none
+  </parse>
+</filter>
+
+<filter cdn.extended2>
+  @type parser
+  key_name month
+  reserve_data true
+  remove_key_name_field true
+  <parse>
+    @type none
+  </parse>
+</filter>
+
+<filter cdn.extended2>
+  @type parser
+  key_name cqtd_date
+  reserve_data true
+  remove_key_name_field true
+  <parse>
+    @type none
+  </parse>
+</filter>
+
+<filter cdn.extended2>
+  @type parser
+  key_name cqtd_time
+  reserve_data true
+  remove_key_name_field true
+  <parse>
+    @type none
+  </parse>
+</filter>
+
+<filter cdn.extended2>
+  @type record_transformer
+  <record>
+    hostname "#{Socket.gethostname}"
+  </record>
+</filter>
+
+<match **>
+  @type elasticsearch
+  host $ELASTICSEARCH_HOST
+  port $ELASTICSEARCH_PORT
+  type_name log
+  index_name cdn.extended2
+  flush_interval 2s
+  @log_level debug
+</match>
+
+
