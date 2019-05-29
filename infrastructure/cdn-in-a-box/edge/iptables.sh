@@ -27,5 +27,7 @@ iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 10.0.0.0/8 -j ACCEPT
 iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 127.0.0.0/8 -j ACCEPT
 iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 172.16.0.0/12 -j ACCEPT
 iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 192.168.0.0/16 -j ACCEPT
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 34.80.0.0/13 -j ACCEPT
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -s 35.247.0.0/16 -j ACCEPT
 iptables -A INPUT -p tcp -m multiport --dports 80,443 -j DROP
 # iptables -L -nv
