@@ -57,7 +57,7 @@ func main() {
 func createCacheStats(client influx.Client, replication int) {
 	db := cache
 	createDatabase(client, db)
-	createRetentionPolicy(client, db, "daily", "26h", replication, true)
+	createRetentionPolicy(client, db, "daily", "30d", replication, true)
 	createRetentionPolicy(client, db, "monthly", "30d", replication, false)
 	createRetentionPolicy(client, db, "indefinite", "INF", replication, false)
 	createContinuousQuery(client, "bandwidth_1min", `CREATE CONTINUOUS QUERY bandwidth_1min ON cache_stats RESAMPLE FOR 2m BEGIN SELECT mean(value) AS "value" INTO "cache_stats"."monthly"."bandwidth.1min" FROM "cache_stats"."daily".bandwidth GROUP BY time(1m), * END`)
@@ -75,7 +75,7 @@ func createCacheStats(client influx.Client, replication int) {
 func createDeliveryServiceStats(client influx.Client, replication int) {
 	db := deliveryService
 	createDatabase(client, db)
-	createRetentionPolicy(client, db, "daily", "26h", replication, true)
+	createRetentionPolicy(client, db, "daily", "30d", replication, true)
 	createRetentionPolicy(client, db, "monthly", "30d", replication, false)
 	createRetentionPolicy(client, db, "indefinite", "INF", replication, false)
 	createContinuousQuery(client, "tps_2xx_ds_1min", `CREATE CONTINUOUS QUERY tps_2xx_ds_1min ON deliveryservice_stats RESAMPLE FOR 2m BEGIN SELECT mean(value) AS "value" INTO "deliveryservice_stats"."monthly"."tps_2xx.ds.1min" FROM "deliveryservice_stats"."daily".tps_2xx WHERE cachegroup = 'total' GROUP BY time(1m), * END`)
