@@ -69,11 +69,16 @@ services:
     hostname: trafficops
     image: trafficops-go
     extra_hosts:
-      - "trafficrouter-21.cdn.shida.info:10.103.21.95"
+      - "trafficrouter-21.cdn.shida.info:10.103.21.93"
     volumes:
       - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
       - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
       - shared:/shared
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
 
   # trafficops-perl runs the legacy Traffic Ops in Perl using the Mojolicious framework.  This remains
   # in place until all API endpoints have been rewritten in Go
@@ -92,7 +97,7 @@ services:
     hostname: trafficops-perl
     image: trafficops-perl
     extra_hosts:
-      - "trafficrouter-21.cdn.shida.info:10.103.21.95"
+      - "trafficrouter-21.cdn.shida.info:10.103.21.93"
     volumes:
       - ./traffic_ops/ca:/ca
       - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
@@ -141,6 +146,11 @@ services:
       - variables.env
     hostname: trafficmonitor
     image: trafficmonitor
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
 
   trafficmonitor-21:
     build:
@@ -161,6 +171,11 @@ services:
     environment:
       - CDN_NAME=QCT-CDN
     hostname: trafficmonitor-21
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
 
   # trafficrouter routes clients to the most optimal cache
   trafficrouter:
@@ -182,6 +197,7 @@ services:
       - shared:/shared
 
   trafficrouter-21:
+    privileged: True
     build:
       context: .
       dockerfile: traffic_router/Dockerfile
@@ -201,6 +217,7 @@ services:
       - ./dns/set-dns.sh:/usr/local/sbin/set-dns.sh
       - ./dns/insert-self-into-dns.sh:/usr/local/sbin/insert-self-into-dns.sh
       - ./traffic_router/run-21.sh:/run.sh
+      - ./edge/iptables.sh:/iptables.sh
       - shared:/shared
 
   # trafficstats collect traffic information

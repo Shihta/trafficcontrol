@@ -103,7 +103,7 @@ echo "traffic_monitor.properties.reload.period=60000" >> $TM_PROPERTIES
 
 # Enroll Traffic Router
 set -x
-to-enroll tr $CDN_NAME "QCT_CG_Edge" "" "" "TR_QCT" "60.248.18.204" "cdn.shida.info" || (while true; do echo "enroll failed."; sleep 3 ; done)
+to-enroll tr $CDN_NAME "QCT_CG_Edge" "" "" "TR_QCT" "60.248.18.202" "cdn.shida.info" || (while true; do echo "enroll failed."; sleep 3 ; done)
 
 # Wait for traffic monitor
 until nc $TM_FQDN $TM_PORT </dev/null >/dev/null 2>&1; do
@@ -114,4 +114,5 @@ done
 touch $LOGFILE $ACCESSLOG
 exec /opt/tomcat/bin/catalina.sh run &
 
+/iptables.sh
 tail -F $CATALINA_OUT $CATALINA_LOG $LOGFILE $ACCESSLOG 

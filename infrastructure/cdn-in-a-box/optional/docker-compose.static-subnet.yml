@@ -45,7 +45,7 @@ services:
     dns: 10.103.11.127
     networks:
       edge-network-21:
-        ipv4_address: 10.103.21.93
+        ipv4_address: 10.103.21.92
   trafficops-perl:
   trafficportal:
     networks:
@@ -58,7 +58,7 @@ services:
     dns: 10.103.11.127
     networks:
       edge-network-21:
-        ipv4_address: 10.103.21.95
+        ipv4_address: 10.103.21.93
   influxdb:
   trafficvault:
   edge:
